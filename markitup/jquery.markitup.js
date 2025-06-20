@@ -98,7 +98,9 @@
 
 		return this.each(function() {
 			var $$, textarea, levels, scrollPosition, caretPosition, caretOffset,
-				clicked, hash, header, footer, previewWindow, template, iFrame, abort;
+				clicked, hash, header, footer, previewWindow, template, iFrame, abort,
+				id, nameSpace, resizeHandle, key, value, selection, block, line, lines,
+				string, start, len, range, li, sp;
 			$$ = $(this);
 			textarea = this;
 			levels = [];
@@ -419,9 +421,6 @@
 				if (previewWindow && options.previewAutoRefresh) {
 					refreshPreview(); 
 				}
-
-				// Triggers an input event to allow other scripts to react.
-				textarea.dispatchEvent(new Event('input'));
 																									
 				// reinit keyevent
 				shiftKey = altKey = ctrlKey = abort = false;
@@ -479,7 +478,8 @@
 				if (document.selection) {
 					selection = document.selection.createRange().text;
 					if (browser.msie) { // ie
-						var range = document.selection.createRange(), rangeCopy = range.duplicate();
+						range = document.selection.createRange();
+						var rangeCopy = range.duplicate();
 						rangeCopy.moveToElementText(textarea);
 						caretPosition = -1;
 						while(rangeCopy.inRange(range)) {
